@@ -12,7 +12,8 @@
 var framed = true
 ApexChat = {};
 ApexChat.Callbacks = {};
-window.addEventListener("message", function(){
+window.addEventListener("message", function(event){
+    
     var result;
     switch(event.data.method){
         case "ApexChat.Cookies.set":
@@ -27,10 +28,12 @@ window.addEventListener("message", function(){
             if(callback){
                 callback.apply(ApexChat.Cookies, result)
             }
+            delete ApexChat.Callbacks[event.data.id];
             break;
     }
 
-    if(event.data.method.indexOf(".result") == -1){
+    // this "if" avoids infinte loops of posting back and forth, and self-posting
+    if(event.data.method.indexOf(".result") == -1 && event.source != window){
         // only post if not a result
         event.source.postMessage({
             method: event.data.method + ".result",
