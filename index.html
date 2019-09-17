@@ -9,5 +9,16 @@
 <body>
 <div id="out">
 </div>
+<script>
+    
+    ApexChat.Cookies.get('test', function(result){
+        if(!result){
+            document.getElementById('out').innerHTML = 'No cookie found'
+            ApexChat.Cookies.set('test', 'Cookie found');
+        }else{
+            document.getElementById('out').innerHTML = result
+        }
+    })
+</script>
 </body>
 </html>
