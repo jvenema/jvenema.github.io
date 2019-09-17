@@ -1,6 +1,9 @@
 ApexChat.Callbacks = {};
 window.addEventListener("message", function(event){
-    
+    if(event.source == window){
+        // ignore events from myself
+        return
+    }
     var result;
     console.log('message rx', event)
     switch(event.data.method){
