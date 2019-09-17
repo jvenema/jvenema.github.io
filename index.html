@@ -29,10 +29,13 @@ window.addEventListener("message", function(){
             break;
     }
 
-    event.source.postMessage({
-        method: event.data.method + ".result",
-        result: result
-    }, event.origin);
+    if(event.data.method.indexOf(".result") == -1){
+        // only post if not a result
+        event.source.postMessage({
+            method: event.data.method + ".result",
+            result: result
+        }, event.origin);
+    }
 }, false);
 
 ApexChat.Cookies = {
