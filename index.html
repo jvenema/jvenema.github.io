@@ -14,7 +14,7 @@ ApexChat = {};
 ApexChat.Callbacks = {};
 window.addEventListener("message", function(){
     var result;
-    var args = Array.prototype.slice.call(arguments)
+    var args = Array.prototype.slice.call(event.data.arguments)
     switch(event.data.method){
         case "ApexChat.Cookies.set":
             result = ApexChat.Cookies.set.apply(ApexChat.Cookies, args)
