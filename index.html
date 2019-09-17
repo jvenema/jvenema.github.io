@@ -78,7 +78,7 @@ ApexChat.Cookies = {
           	    window.postMessage({
                     id: id,
             	    method: "ApexChat.Cookies.get",
-            	    arguments: Array.prototype.slice.call(arguments)
+            	    arguments: [name]
                 });
                 ApexChat.Callbacks[id] = callback
           	    return
@@ -101,7 +101,7 @@ ApexChat.Cookies = {
           	    window.postMessage({
                     id: id,
             	    method: "ApexChat.Cookies.list",
-            	    arguments: Array.prototype.slice.call(arguments)
+            	    arguments: []
                 });
                 ApexChat.Callbacks[id] = callback
           	    return
@@ -124,8 +124,8 @@ ApexChat.Cookies = {
     };
 
 ApexChat.Cookies.set('test', 'this is a test');
-ApexChat.Cookies.get('test', function(){
-    document.getElementById('out').innerHTML
+ApexChat.Cookies.get('test', function(result){
+    document.getElementById('out').innerHTML = result
 })
 </script>
 </html>
