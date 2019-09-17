@@ -22,7 +22,7 @@ window.addEventListener("message", function(event){
         case "ApexChat.Cookies.set.result":
             var callback = ApexChat.Callbacks[event.data.id];
             if(callback){
-                callback.apply(ApexChat.Cookies, result)
+                callback(result)
             }else{
                 console.warn('No callback!', event)
             }
