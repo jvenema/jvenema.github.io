@@ -2,6 +2,7 @@ ApexChat.Callbacks = {};
 window.addEventListener("message", function(event){
     if(event.source == window){
         // ignore events from myself
+        console.log('Ignoring event from ' + event.origin, event)
         return
     }
     var result;
@@ -12,13 +13,11 @@ window.addEventListener("message", function(event){
             break;
         case "ApexChat.Cookies.get":
             ApexChat.Cookies.get(event.data.arguments[0], function(result){
-                if(event.source != window){
-                    event.source.postMessage({
-                        id: event.data.id,
-                        method: event.data.method + ".result",
-                        result: result
-                    }, event.origin);
-                }
+                event.source.postMessage({
+                    id: event.data.id,
+                    method: event.data.method + ".result",
+                    result: result
+                }, '*'); //event.origin);
             })
             break;
         case "ApexChat.Cookies.get.result":
@@ -45,7 +44,7 @@ ApexChat.Cookies = {
             window.postMessage({
                 method: "ApexChat.Cookies.set",
                 arguments: Array.prototype.slice.call(arguments)
-            });
+            }, '*');
             return
         }
         var expires;
@@ -84,7 +83,7 @@ ApexChat.Cookies = {
                 id: id,
                 method: "ApexChat.Cookies.get",
                 arguments: [name]
-            });
+            }, '*');
             return
         }
         if (name) {
@@ -108,7 +107,7 @@ ApexChat.Cookies = {
                 id: id,
                 method: "ApexChat.Cookies.list",
                 arguments: []
-            });
+            }, '*');
             return
         }
         var pairs = document.cookie.split(new RegExp("; "));
