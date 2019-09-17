@@ -5,10 +5,18 @@ window.addEventListener("message", function(event){
     console.log('message rx', event)
     switch(event.data.method){
         case "ApexChat.Cookies.set":
-            result = ApexChat.Cookies.set.apply(ApexChat.Cookies, event.data.arguments)
+            ApexChat.Cookies.set(event.data.arguments[0], event.data.arguments[1], evenet.data.arguments[2]);
             break;
         case "ApexChat.Cookies.get":
-            result = ApexChat.Cookies.get.apply(ApexChat.Cookies, event.data.arguments)
+            ApexChat.Cookies.get(event.data.arguments[0], function(result){
+                if(event.source != window){
+                    event.source.postMessage({
+                        id: event.data.id,
+                        method: event.data.method + ".result",
+                        result: result
+                    }, event.origin);
+                }
+            })
             break;
         case "ApexChat.Cookies.get.result":
         case "ApexChat.Cookies.set.result":
@@ -24,11 +32,7 @@ window.addEventListener("message", function(event){
 
     // this "if" avoids infinte loops of posting back and forth, and self-posting
     if(event.data.method.indexOf(".result") == -1 && event.source != window){
-        // only post if not a result
-        event.source.postMessage({
-            method: event.data.method + ".result",
-            result: result
-        }, event.origin);
+        
     }
 }, false);
 
