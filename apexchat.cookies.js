@@ -2,6 +2,7 @@ ApexChat.Callbacks = {};
 window.addEventListener("message", function(event){
     
     var result;
+    console.log('message rx', event)
     switch(event.data.method){
         case "ApexChat.Cookies.set":
             result = ApexChat.Cookies.set.apply(ApexChat.Cookies, event.data.arguments)
@@ -14,6 +15,8 @@ window.addEventListener("message", function(event){
             var callback = ApexChat.Callbacks[event.data.id];
             if(callback){
                 callback.apply(ApexChat.Cookies, result)
+            }else{
+                console.warn('No callback!', event)
             }
             delete ApexChat.Callbacks[event.data.id];
             break;
@@ -68,12 +71,13 @@ ApexChat.Cookies = {
     get: function (name, callback) {
         if(ApexChat.framed){
             var id = (new Date()).getTime()
+
+            ApexChat.Callbacks[id] = callback
             window.postMessage({
                 id: id,
                 method: "ApexChat.Cookies.get",
                 arguments: [name]
             });
-            ApexChat.Callbacks[id] = callback
             return
         }
         if (name) {
@@ -91,12 +95,13 @@ ApexChat.Cookies = {
     list: function (callback) {
         if(ApexChat.framed){
             var id = (new Date()).getTime()
+
+            ApexChat.Callbacks[id] = callback
             window.postMessage({
                 id: id,
                 method: "ApexChat.Cookies.list",
                 arguments: []
             });
-            ApexChat.Callbacks[id] = callback
             return
         }
         var pairs = document.cookie.split(new RegExp("; "));
