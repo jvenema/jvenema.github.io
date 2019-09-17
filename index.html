@@ -8,6 +8,10 @@
 </div>
 </body>
 <script>
+
+var framed = true
+ApexChat = {};
+ApexChat.Callbacks = {};
 window.addEventListener("message", function(){
     var result;
     switch(event.data.method){
@@ -17,6 +21,12 @@ window.addEventListener("message", function(){
         case "ApexChat.Cookies.get":
             result = ApexChat.Cookies.get.apply(ApexChat.Cookies, event.data.arguments)
             break;
+        case "ApexChat.Cookies.get.result":
+            ApexChat.Callbacks[event.data.id].apply(ApexChat.Cookies, result)
+            break;
+        case "ApexChat.Cookies.set.result":
+            ApexChat.Callbacks[event.data.id].apply(ApexChat.Cookies, result)
+            break;
     }
 
     event.source.postMessage({
@@ -25,7 +35,6 @@ window.addEventListener("message", function(){
     }, event.origin);
 }, false);
 
-ApexChat = {};
 ApexChat.Cookies = {
         set: function (name, value, days) {
         	if(framed){
@@ -64,10 +73,13 @@ ApexChat.Cookies = {
         },
         get: function (name, callback) {
         	if(framed){
+                var id = (new Date()).getTime()
           	    window.postMessage({
+                    id: id,
             	    method: "ApexChat.Cookies.get",
             	    arguments: arguments
                 });
+                ApexChat.Callbacks[id] = callback
           	    return
             }
             if (name) {
@@ -83,6 +95,16 @@ ApexChat.Cookies = {
         },
 
         list: function (callback) {
+            if(framed){
+                var id = (new Date()).getTime()
+          	    window.postMessage({
+                    id: id,
+            	    method: "ApexChat.Cookies.list",
+            	    arguments: arguments
+                });
+                ApexChat.Callbacks[id] = callback
+          	    return
+            }
             var pairs = document.cookie.split(new RegExp("; "));
             if (pairs.length > 0 && pairs[0] !== "") {
                 var keys = new Array(pairs.length);
@@ -101,6 +123,8 @@ ApexChat.Cookies = {
     };
 
 ApexChat.Cookies.set('test', 'this is a test');
-document.getElementById('out').innerHTML = ApexChat.Cookies.get('test')
+ApexChat.Cookies.get('test', function(){
+    document.getElementById('out').innerHTML
+})
 </script>
 </html>
