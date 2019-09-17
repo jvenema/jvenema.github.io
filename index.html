@@ -22,10 +22,11 @@ window.addEventListener("message", function(){
             result = ApexChat.Cookies.get.apply(ApexChat.Cookies, event.data.arguments)
             break;
         case "ApexChat.Cookies.get.result":
-            ApexChat.Callbacks[event.data.id].apply(ApexChat.Cookies, result)
-            break;
         case "ApexChat.Cookies.set.result":
-            ApexChat.Callbacks[event.data.id].apply(ApexChat.Cookies, result)
+            var callback = ApexChat.Callbacks[event.data.id];
+            if(callback){
+                callback.apply(ApexChat.Cookies, result)
+            }
             break;
     }
 
