@@ -14,13 +14,12 @@ ApexChat = {};
 ApexChat.Callbacks = {};
 window.addEventListener("message", function(){
     var result;
-    var args = Array.prototype.slice.call(event.data.arguments)
     switch(event.data.method){
         case "ApexChat.Cookies.set":
-            result = ApexChat.Cookies.set.apply(ApexChat.Cookies, args)
+            result = ApexChat.Cookies.set.apply(ApexChat.Cookies, event.data.arguments)
             break;
         case "ApexChat.Cookies.get":
-            result = ApexChat.Cookies.get.apply(ApexChat.Cookies, args)
+            result = ApexChat.Cookies.get.apply(ApexChat.Cookies, event.data.arguments)
             break;
         case "ApexChat.Cookies.get.result":
             ApexChat.Callbacks[event.data.id].apply(ApexChat.Cookies, result)
