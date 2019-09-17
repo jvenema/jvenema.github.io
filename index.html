@@ -41,7 +41,7 @@ ApexChat.Cookies = {
         	if(framed){
           	    window.postMessage({
             	    method: "ApexChat.Cookies.set",
-            	    arguments: arguments
+            	    arguments: Array.prototype.slice.call(arguments)
                 });
           	    return
             }
@@ -78,7 +78,7 @@ ApexChat.Cookies = {
           	    window.postMessage({
                     id: id,
             	    method: "ApexChat.Cookies.get",
-            	    arguments: arguments
+            	    arguments: Array.prototype.slice.call(arguments)
                 });
                 ApexChat.Callbacks[id] = callback
           	    return
@@ -101,7 +101,7 @@ ApexChat.Cookies = {
           	    window.postMessage({
                     id: id,
             	    method: "ApexChat.Cookies.list",
-            	    arguments: arguments
+            	    arguments: Array.prototype.slice.call(arguments)
                 });
                 ApexChat.Callbacks[id] = callback
           	    return
